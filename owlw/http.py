@@ -22,26 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from selenium import webdriver
-from time import sleep
-from .http import HTTPSession
+import requests
 
-__version__ = '0.1.0'
+class HTTPSession:
+    base = 'https://api.twitch.tv/helix'
 
-class OWLWatcher:
-    def __init__(self, client_id, *, profile_path=None):
-        self.http = HTTPSession(client_id)
-        self._watching = False
-        self.ffprofile = webdriver.FirefoxProfile(profile_path)
+    def __init__(self, client_id):
+        self.client_id = client_id
+    
+    def request(self, method, url, *, params):
+        headers = {'Client-ID': self.client_id}
+        url = f'{self.base}{url}'
+        r = requests.request(method, url, params=params, headers=headers)
+        return r.json()
 
-    def start(self):
-        while True:
-            data = self.http.get_stream('overwatchleague')
-            if data['data'] and not self._watching:
-                driver = webdriver.Firefox(firefox_profile=self.ffprofile)
-                driver.get("https://twitch.tv/overwatchleague")
-                self._watching = True
-            elif not data['data'] and self._watching:
-                driver.close()
-                self._watching = False
-            sleep(600)   
+    def get_stream(self, channel_name):
+        params = [('user_login', channel_name)]
+        return self.request('GET', '/streams', params=params)
