@@ -45,6 +45,8 @@ class Stream:
         if data is []:
             return
 
+        data = data[0]
+
         return cls(
             title=data['title'],
             game_id=data['game_id'],
