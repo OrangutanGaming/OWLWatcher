@@ -42,7 +42,7 @@ class Stream:
     @classmethod
     def from_response(cls, response: dict) -> Optional['Stream']:
         data = response['data']
-        if data is []:
+        if not data:
             return
 
         data = data[0]
