@@ -34,6 +34,11 @@ def _status(text: str, newline: bool = False):
     click.echo(m, nl=newline)
 
 
+@click.group()
+def cli():
+    pass
+
+
 @click.command()
 @click.option('--once', is_flag=True,
               help='If this option is given, it will only run until the end of the next stream.')
@@ -46,6 +51,4 @@ def run(once: bool, firefox_profile_path: Optional[str], sleep_time: int, client
     OWLWatcher(client_id, profile_path=firefox_profile_path).start(sleep_time, once=once)
 
 
-@click.group()
-def cli():
-    pass
+cli.add_command(run)
