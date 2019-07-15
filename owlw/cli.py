@@ -45,7 +45,7 @@ def cli():
 @click.option('--firefox-profile-path',
               help='The path to your Firefox Profile.')
 @click.option('--sleep-time', default=600, type=int,
-              help='The number of seconds to wait before checking the stream status again.')
+              help='The number of seconds to wait before checking the stream status again. Defaults to 600 seconds.')
 @click.argument('client_id', required=True, type=str)
 def run(once: bool, firefox_profile_path: Optional[str], sleep_time: int, client_id: str):
     OWLWatcher(client_id, profile_path=firefox_profile_path).start(sleep_time, once=once)
