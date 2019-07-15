@@ -22,12 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from typing import Optional
+
 import click
+
+from .classes import OWLWatcher
 
 
 def _status(text: str, newline: bool = False):
     m = "\r" + text + "\033[K"
     click.echo(m, nl=newline)
+
+
+@click.command()
+@click.option('--once', is_flag=True,
+              help='If this option is given, it will only run until the end of the next stream.')
+@click.option('--firefox-profile-path',
+              help='The path to your Firefox Profile.')
+@click.option('--sleep-time', default=600, type=int,
+              help='The number of seconds to wait before checking the stream status again.')
+@click.argument('client_id', required=True, type=str)
+def run(once: bool, firefox_profile_path: Optional[str], sleep_time: int, client_id: str):
+    OWLWatcher(client_id, profile_path=firefox_profile_path).start(sleep_time, once=once)
 
 
 @click.group()
