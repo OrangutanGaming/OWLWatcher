@@ -80,11 +80,19 @@ class OWLWatcher:
         self.ffprofile = webdriver.FirefoxProfile(profile_path)
         self._watching = False
 
+    def _check_title(self, title: str) -> bool:
+        """Checks if the title matches a current game or a replay."""
+        title = title.lower()
+        for i in ('rewatch',):
+            if i in title:
+                return False
+        return True
+
     def start(self, sleep_seconds: int = 600, *, once: bool = False):
         driver = None
         while True:
             stream = self.http.get_stream(self.channel_name)
-            if stream and not self._watching:
+            if stream and not self._watching and self._check_title(stream.title):
                 # Live and not watching
                 if driver is None:
                     driver = webdriver.Firefox(firefox_profile=self.ffprofile)
