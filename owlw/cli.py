@@ -39,7 +39,7 @@ def cli():
     pass
 
 
-@click.command()
+@cli.command()
 @click.option('--once', is_flag=True,
               help='If this option is given, it will only run until the end of the next stream.')
 @click.option('--firefox-profile-path',
@@ -49,6 +49,3 @@ def cli():
 @click.argument('client_id', required=True, type=str)
 def run(once: bool, firefox_profile_path: Optional[str], sleep_time: int, client_id: str):
     OWLWatcher(client_id, profile_path=firefox_profile_path).start(sleep_time, once=once)
-
-
-cli.add_command(run)
